@@ -16,4 +16,38 @@ public class Enums : MonoBehaviour
         Play,
         FastMode = 5
     }
+    public enum Modules
+    {
+        Repellant,
+        Chemotaxis/*,
+        Phototaxis,
+        ExternalMemorySlime,
+        Sporolation,
+        Splitting*/
+    }
+
+    public enum Repellant
+    {
+        variable1,
+        variable2,
+        variable3
+    }
+    public enum Chemotaxis
+    {
+        variable1,
+        variable2,
+        variable3
+    }
+    public enum DrawMode
+    {
+        Deactivated,
+        Wall,
+        Slime,
+        Food
+
+    }
+    struct Parameters
+    {
+
+    }
 }
