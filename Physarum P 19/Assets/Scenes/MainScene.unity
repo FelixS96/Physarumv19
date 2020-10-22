@@ -279,7 +279,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 10916, guid: 0000000000000000f000000000000000, type: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2026,9 +2026,13 @@ MonoBehaviour:
   sidePanel: {fileID: 1589626070}
   editorPanel: {fileID: 1953994111}
   modulePlacement: {x: 0, y: 30, z: 0}
-  modulePrefab: {fileID: 0}
+  modulePrefab: {fileID: 448849811333432258, guid: 1b7123aa25ee1e243a72dd69485cd508,
+    type: 3}
   sidePanelContent: {fileID: 1651903328}
   drawMode: 0
+  drawSize: 3
+  rawImage: {fileID: 107317282}
+  texture2D: {fileID: 0}
 --- !u!4 &1059660795
 Transform:
   m_ObjectHideFlags: 0

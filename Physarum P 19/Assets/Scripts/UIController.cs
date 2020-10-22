@@ -28,13 +28,27 @@ public class UIController : MonoBehaviour
     GameObject sidePanelContent;
     [SerializeField]
     Enums.DrawMode drawMode = Enums.DrawMode.Deactivated;
+    [SerializeField]
+    int drawSize = 3;
+
+    [SerializeField]
+    RawImage rawImage;
+
 
     int[,] gridArea;
     //int pixelSize = 4;
     int deadZoneLeft = 160;
-    int deadZoneDown = 90;
+    int deadZoneDown = 135;
     int imageWidth;
     int imageHeight;
+
+
+    RectTransform rect;
+    [SerializeField]
+    Texture2D texture2D;
+    //List<float> red;
+    //List<float> green;
+    //List<float> blue;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +56,8 @@ public class UIController : MonoBehaviour
         //Deactivate Panels
         sidePanel.SetActive(false);
         editorPanel.SetActive(false);
-
+        SetupImage(rawImage);
+        drawMode = Enums.DrawMode.Wall;
         modulePrefab = Resources.Load("modulePrefab") as GameObject;
         SetUIData(true);
         SetVariablesInSlime(true);
@@ -50,6 +65,25 @@ public class UIController : MonoBehaviour
         //gridArea = new int[(Screen.width - (borderLeft * pixelSize - borderRight * pixelSize)) / pixelSize, (Screen.height - (borderTop * pixelSize - borderBottom * pixelSize)) / pixelSize];
     }
     
+    void SetupImage(RawImage image)
+    {
+        //red = new List<float>();
+        //red = new List<float>();
+        //red = new List<float>();
+        //https://www.youtube.com/watch?v=HjwVDhMLVN0
+        rect = image.GetComponent<RectTransform>();
+        
+        
+        imageWidth = (int)rect.rect.width;;
+        imageHeight = (int)rect.rect.height;
+        
+        texture2D = image.texture as Texture2D;
+        texture2D = new Texture2D(imageWidth, imageHeight);
+        texture2D.filterMode = FilterMode.Point;
+        //texture2D.SetPixels32(texture2D.GetPixels32());
+        texture2D.Apply();
+        //image.texture = texture2D;
+    }
 
     internal void AddModuleToUI(Enums.Modules enumModuleName)
     {
@@ -107,9 +141,9 @@ public class UIController : MonoBehaviour
         Debug.Log("MouseLeft:x " + returnValue.x + " y " + returnValue.y);
         return returnValue;
     }
-    void DrawAtCoordinate(Vector2 position)
+    public void DrawAtCoordinate(Vector2 position)
     {
-        if (position.x < 1 || position.y < 1 || position.x > imageWidth || position.y > imageHeight)
+        if ((position.x < 1) || (position.y < 1) || (position.x > imageWidth) || (position.y > imageHeight))
         {
             Debug.Log("Outside");
         }
@@ -121,22 +155,34 @@ public class UIController : MonoBehaviour
                     
                     break;
                 case Enums.DrawMode.Wall:
-                    ImageAddPixel(position, new Color(1, 1, 1, 1));
+                    ImageAddPixel(position, new Color(0, 0, 0, 1), texture2D);
                     break;
                 case Enums.DrawMode.Slime:
-                    ImageAddPixel(position, new Color(1, 1, 0, 1));
+                    ImageAddPixel(position, new Color(1, 1, 0, 1), texture2D);
                     break;
                 case Enums.DrawMode.Food:
-                    ImageAddPixel(position, new Color(0, 0, 1, 1));
+                    ImageAddPixel(position, new Color(0, 0, 1, 1), texture2D);
                     break;
                 default:
                     break;
             }
         }
     }
-    private void ImageAddPixel(Vector2 coordinate, Color color)
+    private void ImageAddPixel(Vector2 coordinate, Color color, Texture2D target)
     {
-
+        Debug.Log(coordinate.x + ", " + coordinate.y + ", " + color);
+        target.SetPixel((int)coordinate.x, (int)coordinate.y, color);
+        int halfSize = drawSize / 2;
+        for (int i = (0 -halfSize); i < (drawSize +halfSize); i++)
+        {
+            for (int j = (0 -halfSize); j < (drawSize +halfSize); j++)
+            {
+                target.SetPixel((int)coordinate.x + i, (int)coordinate.y + j, color);
+            }
+        }
+        target.Apply();
+        Debug.Log("Color: "+target.GetPixel((int)coordinate.x, (int)coordinate.y));
+        rawImage.texture = target;
     }
     private void AddVariables(string name)
     {

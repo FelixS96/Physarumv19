@@ -33,9 +33,9 @@ public class InputManager : MonoBehaviour
                 Debug.Log("EditorDown");
             }
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
-            uiController.ReturnGrid(GetMousePos());
+            uiController.DrawAtCoordinate(uiController.ReturnGrid(GetMousePos()));
         }
     }
     Vector2 GetMousePos()
