@@ -32,20 +32,19 @@ public class UIController : MonoBehaviour
     int drawSize = 3;
 
     [SerializeField]
-    RawImage rawImage;
+    public RawImage rawImage;
 
 
     int[,] gridArea;
     //int pixelSize = 4;
     int deadZoneLeft = 160;
     int deadZoneDown = 135;
-    int imageWidth;
-    int imageHeight;
+    public int imageWidth;
+    public int imageHeight;
 
 
     RectTransform rect;
-    [SerializeField]
-    Texture2D texture2D;
+    public Texture2D texture2D;
     //List<float> red;
     //List<float> green;
     //List<float> blue;
@@ -63,6 +62,7 @@ public class UIController : MonoBehaviour
         SetVariablesInSlime(true);
         slimeManager = this.GetComponent<SlimeManager>();
         //gridArea = new int[(Screen.width - (borderLeft * pixelSize - borderRight * pixelSize)) / pixelSize, (Screen.height - (borderTop * pixelSize - borderBottom * pixelSize)) / pixelSize];
+       
     }
     
     void SetupImage(RawImage image)
@@ -83,6 +83,7 @@ public class UIController : MonoBehaviour
         //texture2D.SetPixels32(texture2D.GetPixels32());
         texture2D.Apply();
         //image.texture = texture2D;
+        SetWhiteAllPixel(texture2D);
     }
 
     internal void AddModuleToUI(Enums.Modules enumModuleName)
@@ -102,6 +103,10 @@ public class UIController : MonoBehaviour
     public void SetDrawMode(int mode)
     {
         drawMode = (Enums.DrawMode)mode;
+        if (drawMode != 0)
+        {
+            SetGameSpeed(0);
+        }
     }
 
     // Update is called once per frame
@@ -128,17 +133,17 @@ public class UIController : MonoBehaviour
     }
     public Vector2 ReturnGrid(Vector2 coordinate)
     {
-        Ray ray;
-        RaycastHit hit;
-        ray = Camera.main.ScreenPointToRay(coordinate);
-        Debug.DrawRay(ray.origin, ray.direction * 10, Color.green);
-        if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
-        {
-            Debug.Log(hit.transform.name);
-        }
+        //Ray ray;
+        //RaycastHit hit;
+        //ray = Camera.main.ScreenPointToRay(coordinate);
+        //Debug.DrawRay(ray.origin, ray.direction * 10, Color.green);
+        //if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
+        //{
+        //    Debug.Log(hit.transform.name);
+        //}
         Vector2 returnValue;
         returnValue = new Vector2((int)coordinate.x - deadZoneLeft, (int)coordinate.y - deadZoneDown);
-        Debug.Log("MouseLeft:x " + returnValue.x + " y " + returnValue.y);
+        //Debug.Log("MouseLeft:x " + returnValue.x + " y " + returnValue.y);
         return returnValue;
     }
     public void DrawAtCoordinate(Vector2 position)
@@ -168,12 +173,26 @@ public class UIController : MonoBehaviour
             }
         }
     }
+    public void SetWhiteAllPixel(Texture2D texture)
+    {
+        Color[] color = new Color[texture.width * texture.height];
+        for (int i = 0; i < texture.height; i++)
+        {
+            for (int j = 0; j < texture.width; j++)
+            {
+                texture.SetPixel(j, i, Color.white);
+            }
+        }
+        texture.Apply();
+        //rawImage.GetComponent<Renderer>().material.mainTexture = texture;
+        rawImage.texture = texture;
+    }
     private void ImageAddPixel(Vector2 coordinate, Color color, Texture2D target)
     {
         Debug.Log(coordinate.x + ", " + coordinate.y + ", " + color);
         target.SetPixel((int)coordinate.x, (int)coordinate.y, color);
         int halfSize = drawSize / 2;
-        for (int i = (0 -halfSize); i < (drawSize +halfSize); i++)
+        for (int i = (0 - halfSize); i < (drawSize + halfSize); i++)
         {
             for (int j = (0 -halfSize); j < (drawSize +halfSize); j++)
             {
@@ -181,7 +200,7 @@ public class UIController : MonoBehaviour
             }
         }
         target.Apply();
-        Debug.Log("Color: "+target.GetPixel((int)coordinate.x, (int)coordinate.y));
+        //Debug.Log("Color: "+target.GetPixel((int)coordinate.x, (int)coordinate.y));
         rawImage.texture = target;
     }
     private void AddVariables(string name)
@@ -206,7 +225,8 @@ public class UIController : MonoBehaviour
         if (sidePanel.activeSelf)
         {
             editorPanel.SetActive(false);
-            drawMode = Enums.DrawMode.Deactivated;
+            SetDrawMode(0);
+            SetGameSpeed(0);
         }
     }
     //toggle Level Editor Panel visibility
@@ -215,7 +235,7 @@ public class UIController : MonoBehaviour
         editorPanel.SetActive(!editorPanel.activeSelf);
         if (!editorPanel.activeSelf)
         {
-            drawMode = Enums.DrawMode.Deactivated;
+            SetDrawMode(0);
         }
         else
         {
@@ -227,6 +247,7 @@ public class UIController : MonoBehaviour
         if (SpeedMode>-1)
         {
             slimeManager.gameSpeed = SpeedMode;
+            
         }
         else
         {
@@ -235,6 +256,7 @@ public class UIController : MonoBehaviour
         if (SpeedMode > 0)
         {
             playPauseButton.text = "Pause";
+            SetDrawMode(0);
         }
         else
         {
@@ -243,6 +265,7 @@ public class UIController : MonoBehaviour
     }
     public void ToggleGameSpeed()
     {
+        SetDrawMode(0);
         if (slimeManager.gameSpeed == (int)Enums.GameSpeed.FastMode || slimeManager.gameSpeed == (int)Enums.GameSpeed.Play)
         {
             slimeManager.gameSpeed = (int)Enums.GameSpeed.Pause;
@@ -252,6 +275,9 @@ public class UIController : MonoBehaviour
         {
             slimeManager.gameSpeed = (int)Enums.GameSpeed.Play;
             playPauseButton.text = "Pause";
+
+            editorPanel.SetActive(false);
+            sidePanel.SetActive(false);
         }
     }
     public void ResetToDefaultVariables()
