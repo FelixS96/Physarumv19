@@ -30,12 +30,14 @@ public class UIController : MonoBehaviour
     Enums.DrawMode drawMode = Enums.DrawMode.Deactivated;
     [SerializeField]
     int drawSize = 3;
+    [SerializeField]
+    GridData gridData;
 
     [SerializeField]
     public RawImage rawImage;
 
 
-    int[,] gridArea;
+    //int[,] gridArea;
     //int pixelSize = 4;
     int deadZoneLeft = 160;
     int deadZoneDown = 135;
@@ -44,10 +46,11 @@ public class UIController : MonoBehaviour
 
 
     RectTransform rect;
-    public Texture2D texture2D;
-    //List<float> red;
-    //List<float> green;
-    //List<float> blue;
+    [SerializeField]
+    public Color[] globalBlackColorAll;
+    public Texture2D texture2DObject;
+    public Texture2D texture2DChemical;
+    public bool drawChanges;
 
     // Start is called before the first frame update
     void Start()
@@ -55,35 +58,39 @@ public class UIController : MonoBehaviour
         //Deactivate Panels
         sidePanel.SetActive(false);
         editorPanel.SetActive(false);
+        gridData = FindObjectOfType<GridData>();
+        FillArray();
+
         SetupImage(rawImage);
-        drawMode = Enums.DrawMode.Wall;
+        drawMode = Enums.DrawMode.Deactivated;
+
         modulePrefab = Resources.Load("modulePrefab") as GameObject;
         SetUIData(true);
         SetVariablesInSlime(true);
         slimeManager = this.GetComponent<SlimeManager>();
-        //gridArea = new int[(Screen.width - (borderLeft * pixelSize - borderRight * pixelSize)) / pixelSize, (Screen.height - (borderTop * pixelSize - borderBottom * pixelSize)) / pixelSize];
-       
     }
     
     void SetupImage(RawImage image)
     {
-        //red = new List<float>();
-        //red = new List<float>();
-        //red = new List<float>();
-        //https://www.youtube.com/watch?v=HjwVDhMLVN0
         rect = image.GetComponent<RectTransform>();
-        
-        
         imageWidth = (int)rect.rect.width;;
         imageHeight = (int)rect.rect.height;
-        
-        texture2D = image.texture as Texture2D;
-        texture2D = new Texture2D(imageWidth, imageHeight);
-        texture2D.filterMode = FilterMode.Point;
-        //texture2D.SetPixels32(texture2D.GetPixels32());
-        texture2D.Apply();
-        //image.texture = texture2D;
-        SetWhiteAllPixel(texture2D);
+
+        texture2DObject = image.texture as Texture2D;
+        texture2DObject = new Texture2D(imageWidth, imageHeight);
+        texture2DObject.filterMode = FilterMode.Point;
+        texture2DObject.Apply();
+        SetAllPixel(ref texture2DObject, Color.white);
+        rawImage.GetComponent<GridData>().viewTexture = texture2DObject;
+
+        texture2DChemical = image.texture as Texture2D;
+        texture2DChemical = new Texture2D(imageWidth, imageHeight);
+        texture2DChemical.filterMode = FilterMode.Point;
+        texture2DChemical.Apply();
+        SetAllPixel(ref texture2DChemical, Color.black);
+        rawImage.GetComponent<GridData>().chemicalTexture = texture2DChemical;
+
+
     }
 
     internal void AddModuleToUI(Enums.Modules enumModuleName)
@@ -160,32 +167,40 @@ public class UIController : MonoBehaviour
                     
                     break;
                 case Enums.DrawMode.Wall:
-                    ImageAddPixel(position, new Color(0, 0, 0, 1), texture2D);
+                    ImageAddPixel(position, new Color(0, 0, 0, 1), texture2DObject);
+                    drawChanges = true;
                     break;
                 case Enums.DrawMode.Slime:
-                    ImageAddPixel(position, new Color(1, 1, 0, 1), texture2D);
+                    ImageAddPixel(position, new Color(1, 1, 0, 1), texture2DObject);
+                    drawChanges = true;
                     break;
                 case Enums.DrawMode.Food:
-                    ImageAddPixel(position, new Color(0, 0, 1, 1), texture2D);
+                    ImageAddPixel(position, new Color(0, 0, 1, 1), texture2DObject);
+                    drawChanges = true;
                     break;
                 default:
                     break;
             }
         }
     }
-    public void SetWhiteAllPixel(Texture2D texture)
+    void FillArray()
     {
-        Color[] color = new Color[texture.width * texture.height];
+        globalBlackColorAll = new Color[imageWidth * imageHeight];
+        for (int i = 0; i < (imageHeight*imageWidth); i++)
+        {
+            globalBlackColorAll[i] = Color.black;
+        }
+    }
+    public void SetAllPixel(ref Texture2D texture, Color targetColor)
+    {
         for (int i = 0; i < texture.height; i++)
         {
             for (int j = 0; j < texture.width; j++)
             {
-                texture.SetPixel(j, i, Color.white);
+                texture.SetPixel(j, i, targetColor);
             }
         }
         texture.Apply();
-        //rawImage.GetComponent<Renderer>().material.mainTexture = texture;
-        rawImage.texture = texture;
     }
     private void ImageAddPixel(Vector2 coordinate, Color color, Texture2D target)
     {
@@ -201,7 +216,7 @@ public class UIController : MonoBehaviour
         }
         target.Apply();
         //Debug.Log("Color: "+target.GetPixel((int)coordinate.x, (int)coordinate.y));
-        rawImage.texture = target;
+        gridData.viewTexture = target;
     }
     private void AddVariables(string name)
     {

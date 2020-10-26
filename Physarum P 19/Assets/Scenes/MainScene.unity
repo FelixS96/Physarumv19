@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 107317281}
   - component: {fileID: 107317283}
   - component: {fileID: 107317282}
+  - component: {fileID: 107317284}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -294,6 +295,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 107317280}
   m_CullTransparentMesh: 0
+--- !u!114 &107317284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107317280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44a0970ce4bbb0f47955e69865291518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewTexture: {fileID: 0}
+  chemicalTexture: {fileID: 0}
 --- !u!1 &155359447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,9 +2080,7 @@ MonoBehaviour:
   timePassedUI: 0
   activeModules: 
   pixeldata: []
-  check: 0
   uiController: {fileID: 1059660794}
-  init: 0
 --- !u!114 &1059660797
 MonoBehaviour:
   m_ObjectHideFlags: 0

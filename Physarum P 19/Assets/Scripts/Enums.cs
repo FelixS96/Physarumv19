@@ -18,7 +18,7 @@ public class Enums : MonoBehaviour
     }
     public enum Modules
     {
-        Repellant,
+        Repellent,
         Chemotaxis/*,
         Phototaxis,
         ExternalMemorySlime,
@@ -46,8 +46,23 @@ public class Enums : MonoBehaviour
         Food
 
     }
+    public enum Colors
+    {
+        Wall,
+        Slime,
+        Food,
+        Repellent
+    }
+    public enum Layers
+    {
+        Object,
+        Chemical,
+        Visual
+
+    }
     struct Parameters
     {
 
     }
+
 }

@@ -9,15 +9,20 @@ public class SlimeManager : MonoBehaviour
     public int gameSpeed;
     public float timePassedUI;
 
-    private float lastTime;
-    private float deltaTime;
+    int preDefWidth = 1600, preDefHeight = 810;
+    
     [SerializeField]
     List<Enums.Modules> activeModules;
+    
     [SerializeField]
-    Color[] pixeldata;
+    Color[] pixelDataObj;
+    [SerializeField]
+    Color[] pixelDataChem;
     
     [SerializeField]
     UIController uiController;
+    [SerializeField]
+    GridData gridData;
     #endregion
 
     // Start is called before the first frame update
@@ -30,8 +35,9 @@ public class SlimeManager : MonoBehaviour
             uiController.AddModuleToUI(module);
             activeModules.Add(module);
         }
+        gridData = FindObjectOfType<GridData>();
     }
-    
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -44,6 +50,13 @@ public class SlimeManager : MonoBehaviour
     {
         timePassedUI += speed;
         uiController.SetTimeUI(timePassedUI);
+        if (uiController.drawChanges)
+        {
+            GetInformation();
+            pixelDataChem = GenerateChemicalMap();
+            Debug.Log("GetInformation + GenerateChemicalMap");
+            uiController.drawChanges = false;
+        }
         GetInformation();
         //Think();
         //Act();
@@ -51,20 +64,39 @@ public class SlimeManager : MonoBehaviour
 
     private void GetInformation()
     {
-        GetDataFromTexture(uiController.texture2D, ref pixeldata);
+        GetDataFromTexture(uiController.texture2DObject, ref pixelDataObj);
         //for testing
-        Debug.Log(ConvertPositionTo1D(new Vector2(0, 0)) + " " + pixeldata[ConvertPositionTo1D(new Vector2(0, 0))]);
-        SetVirtualPixel(new Vector2(0, 1), Color.red, ref pixeldata);
-        SetVirtualPixel(new Vector2(0, 0), Color.red, ref pixeldata);
-        SetVirtualPixel(new Vector2(1, 1), Color.red, ref pixeldata);
-        SetVirtualPixel(new Vector2(1, 0), Color.red, ref pixeldata);
-        SetDataInTexture(uiController.texture2D, pixeldata);
+        Debug.Log(ConvertPositionTo1D(new Vector2(0, 0)) + " " + pixelDataObj[ConvertPositionTo1D(new Vector2(0, 0))]);
+        SetDataInTexture(gridData.viewTexture, pixelDataObj);
+    }
+    Color[] GenerateChemicalMap()
+    {
+        Color[] color = uiController.globalBlackColorAll;
+
+        return color;
     }
     int ConvertPositionTo1D(Vector2 position)
     {
         int converted;
-        converted = (int)(position.x * uiController.imageWidth + position.y);
+        converted = (int)(position.x * preDefWidth + position.y);
         return converted;
+    }
+    float ConvertColorIntoEffect(int layer, Color color)
+    {
+        float result = 0;
+        switch (layer)
+        {
+            case (int)Enums.Layers.Object:
+
+                break;
+            case (int)Enums.Layers.Chemical:
+
+                break;
+            default:
+                break;
+        }
+
+        return result;
     }
     private void Act()
     {
