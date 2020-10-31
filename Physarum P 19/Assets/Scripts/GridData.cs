@@ -42,4 +42,8 @@ public class GridData : MonoBehaviour
         }
 
     }
+    public void ToggleImage()
+    {
+        ShowChemicals = !ShowChemicals;
+    }
 }

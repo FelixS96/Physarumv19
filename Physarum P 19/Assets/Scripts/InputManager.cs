@@ -20,17 +20,17 @@ public class InputManager : MonoBehaviour
             if (Input.GetButtonDown("Space"))
             {
                 uiController.ToggleGameSpeed();
-                Debug.Log("SpaceDown");
+                //Debug.Log("SpaceDown");
             }
             if (Input.GetButtonDown("Tab"))
             {
                 uiController.ToggleSidePanel();
-                Debug.Log("TabDown");
+                //Debug.Log("TabDown");
             }
             if (Input.GetButtonDown("E"))
             {
                 uiController.ToggleEditor();
-                Debug.Log("EditorDown");
+                //Debug.Log("EditorDown");
             }
         }
         if (Input.GetMouseButton(0))

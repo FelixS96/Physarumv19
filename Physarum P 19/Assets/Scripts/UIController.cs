@@ -7,19 +7,24 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    //Params
+    //Scripts
     [SerializeField]
     SlimeManager slimeManager;
+    [SerializeField]
+    GridData gridData;
+    //Text
     [SerializeField]
     TextMeshProUGUI playPauseButton;
     [SerializeField]
     TextMeshProUGUI fastButton;
     [SerializeField]
     TextMeshProUGUI timeDisplay;
+    //Panels
     [SerializeField]
     GameObject sidePanel;
     [SerializeField]
     GameObject editorPanel;
+
     [SerializeField]
     Vector3 modulePlacement;
     [SerializeField]
@@ -30,21 +35,26 @@ public class UIController : MonoBehaviour
     Enums.DrawMode drawMode = Enums.DrawMode.Deactivated;
     [SerializeField]
     int drawSize = 3;
-    [SerializeField]
-    GridData gridData;
-
+    public List<Vector2> newPixels;
     [SerializeField]
     public RawImage rawImage;
+    //Colors
+    public Color drawColorWall;
+    public Color drawColorSlime;
+    public Color drawColorFood;
+    public Color drawColorRepellent;
 
-
-    //int[,] gridArea;
+    
     //int pixelSize = 4;
+    //image and screendata
     int deadZoneLeft = 160;
     int deadZoneDown = 135;
     public int imageWidth;
     public int imageHeight;
+    private int screenWidth;
+    private int screenHeight;
 
-
+    //texturedata
     RectTransform rect;
     [SerializeField]
     public Color[] globalBlackColorAll;
@@ -55,6 +65,9 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
+
         //Deactivate Panels
         sidePanel.SetActive(false);
         editorPanel.SetActive(false);
@@ -62,6 +75,7 @@ public class UIController : MonoBehaviour
         FillArray();
 
         SetupImage(rawImage);
+        slimeManager.pixelDataChem = texture2DChemical.GetPixels();
         drawMode = Enums.DrawMode.Deactivated;
 
         modulePrefab = Resources.Load("modulePrefab") as GameObject;
@@ -107,6 +121,7 @@ public class UIController : MonoBehaviour
             ToggleModule(newModule.GetComponentInChildren<Toggle>());
         });
     }
+    //Set Drawmode and pause if its a drawable material
     public void SetDrawMode(int mode)
     {
         drawMode = (Enums.DrawMode)mode;
@@ -140,24 +155,14 @@ public class UIController : MonoBehaviour
     }
     public Vector2 ReturnGrid(Vector2 coordinate)
     {
-        //Ray ray;
-        //RaycastHit hit;
-        //ray = Camera.main.ScreenPointToRay(coordinate);
-        //Debug.DrawRay(ray.origin, ray.direction * 10, Color.green);
-        //if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
-        //{
-        //    Debug.Log(hit.transform.name);
-        //}
-        Vector2 returnValue;
-        returnValue = new Vector2((int)coordinate.x - deadZoneLeft, (int)coordinate.y - deadZoneDown);
         //Debug.Log("MouseLeft:x " + returnValue.x + " y " + returnValue.y);
-        return returnValue;
+        return new Vector2((int)coordinate.x - ((screenWidth - imageWidth) / 2), (int)coordinate.y - ((screenHeight - imageHeight) / 2));
     }
     public void DrawAtCoordinate(Vector2 position)
     {
         if ((position.x < 1) || (position.y < 1) || (position.x > imageWidth) || (position.y > imageHeight))
         {
-            Debug.Log("Outside");
+            //Debug.Log("Outside");
         }
         else
         {
@@ -167,15 +172,21 @@ public class UIController : MonoBehaviour
                     
                     break;
                 case Enums.DrawMode.Wall:
-                    ImageAddPixel(position, new Color(0, 0, 0, 1), texture2DObject);
+                    ImageAddPixel(position, drawColorWall, texture2DObject);
                     drawChanges = true;
                     break;
                 case Enums.DrawMode.Slime:
-                    ImageAddPixel(position, new Color(1, 1, 0, 1), texture2DObject);
+                    ImageAddPixel(position, drawColorSlime, texture2DObject);
                     drawChanges = true;
                     break;
                 case Enums.DrawMode.Food:
-                    ImageAddPixel(position, new Color(0, 0, 1, 1), texture2DObject);
+                    ImageAddPixel(position, drawColorFood, texture2DObject);
+                    newPixels.Add(position);
+                    drawChanges = true;
+                    break;
+                case Enums.DrawMode.Repellent:
+                    ImageAddPixel(position, drawColorRepellent, texture2DObject);
+                    newPixels.Add(position);
                     drawChanges = true;
                     break;
                 default:
@@ -183,6 +194,7 @@ public class UIController : MonoBehaviour
             }
         }
     }
+    //Fill 1D color array with black
     void FillArray()
     {
         globalBlackColorAll = new Color[imageWidth * imageHeight];
@@ -204,18 +216,20 @@ public class UIController : MonoBehaviour
     }
     private void ImageAddPixel(Vector2 coordinate, Color color, Texture2D target)
     {
-        Debug.Log(coordinate.x + ", " + coordinate.y + ", " + color);
-        target.SetPixel((int)coordinate.x, (int)coordinate.y, color);
+        //target.SetPixel((int)coordinate.x, (int)coordinate.y, color);
         int halfSize = drawSize / 2;
         for (int i = (0 - halfSize); i < (drawSize + halfSize); i++)
         {
-            for (int j = (0 -halfSize); j < (drawSize +halfSize); j++)
+            for (int j = (0 - halfSize); j < (drawSize + halfSize); j++)
             {
-                target.SetPixel((int)coordinate.x + i, (int)coordinate.y + j, color);
+                Vector2 combinedVector = new Vector2(coordinate.x + i, coordinate.y + j);
+                if ((combinedVector.x > -1) && (combinedVector.x < imageWidth) && (combinedVector.y > -1) && (combinedVector.y < imageHeight))
+                {
+                    target.SetPixel((int)combinedVector.x, (int)combinedVector.y, color);
+                }  
             }
         }
         target.Apply();
-        //Debug.Log("Color: "+target.GetPixel((int)coordinate.x, (int)coordinate.y));
         gridData.viewTexture = target;
     }
     private void AddVariables(string name)
@@ -255,6 +269,7 @@ public class UIController : MonoBehaviour
         else
         {
             sidePanel.SetActive(false);
+            SetGameSpeed(0);
         }
     }
     public void SetGameSpeed(int SpeedMode)
