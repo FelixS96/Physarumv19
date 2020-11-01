@@ -6,7 +6,7 @@ public class Enums : MonoBehaviour
 {
     public enum VariableType
     {
-        var1=1,
+        var1 = 1,
         var2,
         var3
     }
@@ -44,19 +44,14 @@ public class Enums : MonoBehaviour
     {
         Deactivated,
         Wall,
-        Slime,
+        SlimeMold,
         Food,
-        Repellent,
-        Erase
+        Repellent//,
+        //Erase
+        //todo: add erase
 
     }
-    public enum Colors
-    {
-        Wall = 1,
-        Slime,
-        Food,
-        Repellent
-    }
+
     //showable layers
     public enum Layers
     {
@@ -76,6 +71,32 @@ public class Enums : MonoBehaviour
         public Color color { get; }
 
     }
-    
+    public enum InfluenceNames
+    {
+        LowFood,
+        IntenseLight,
+        FoodSource,
+        Repellent,
+        Attractant
+    } 
+
+    public struct Influence
+    {
+        public Influence(InfluenceNames influenceName,int strenghtI,Vector2 targetPosI)
+        {
+            name = influenceName;
+            strenght = strenghtI;
+            targetPos = targetPosI;
+        }
+        public InfluenceNames name;
+        public int strenght;
+        public Vector2 targetPos;
+    }
+    public struct Slime
+    {
+        public Vector2 position;
+        public float food;
+        public List<Influence> influences;
+    }
 
 }

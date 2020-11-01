@@ -44,7 +44,7 @@ public class UIController : MonoBehaviour
     public Color drawColorFood;
     public Color drawColorRepellent;
 
-    
+
     //int pixelSize = 4;
     //image and screendata
     int deadZoneLeft = 160;
@@ -83,11 +83,11 @@ public class UIController : MonoBehaviour
         SetVariablesInSlime(true);
         slimeManager = this.GetComponent<SlimeManager>();
     }
-    
+
     void SetupImage(RawImage image)
     {
         rect = image.GetComponent<RectTransform>();
-        imageWidth = (int)rect.rect.width;;
+        imageWidth = (int)rect.rect.width; ;
         imageHeight = (int)rect.rect.height;
 
         texture2DObject = image.texture as Texture2D;
@@ -112,7 +112,7 @@ public class UIController : MonoBehaviour
         modulePlacement += new Vector3(0, -50, 0);
         GameObject newModule = Instantiate(modulePrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         newModule.transform.SetParent(sidePanelContent.transform, false);
-        newModule.GetComponent<RectTransform>().anchorMin = new Vector2(0,1);
+        newModule.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1);
         newModule.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, modulePlacement.y);
         newModule.name = enumModuleName.ToString();
         newModule.GetComponentInChildren<TextMeshProUGUI>().text = enumModuleName.ToString();
@@ -134,12 +134,8 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-    //void SetRectTransformSettings(float, float, float, float)
-    //{
 
-    //}
+    }
     public void ToggleModule(Toggle toggle)
     {
         Debug.Log("ToggleModule");
@@ -169,13 +165,13 @@ public class UIController : MonoBehaviour
             switch (drawMode)
             {
                 case Enums.DrawMode.Deactivated:
-                    
+
                     break;
                 case Enums.DrawMode.Wall:
                     ImageAddPixel(position, drawColorWall, texture2DObject);
                     drawChanges = true;
                     break;
-                case Enums.DrawMode.Slime:
+                case Enums.DrawMode.SlimeMold:
                     ImageAddPixel(position, drawColorSlime, texture2DObject);
                     drawChanges = true;
                     break;
@@ -198,7 +194,7 @@ public class UIController : MonoBehaviour
     void FillArray()
     {
         globalBlackColorAll = new Color[imageWidth * imageHeight];
-        for (int i = 0; i < (imageHeight*imageWidth); i++)
+        for (int i = 0; i < (imageHeight * imageWidth); i++)
         {
             globalBlackColorAll[i] = Color.black;
         }
@@ -226,7 +222,7 @@ public class UIController : MonoBehaviour
                 if ((combinedVector.x > -1) && (combinedVector.x < imageWidth) && (combinedVector.y > -1) && (combinedVector.y < imageHeight))
                 {
                     target.SetPixel((int)combinedVector.x, (int)combinedVector.y, color);
-                }  
+                }
             }
         }
         target.Apply();
@@ -234,13 +230,7 @@ public class UIController : MonoBehaviour
     }
     private void AddVariables(string name)
     {
-        //foreach (Enums.name module in (Enums.Modules[])Enum.GetValues(typeof(Enums.name)))
-        //{
-        //    PlayerPrefs.SetInt(module.ToString(), 1);
-        //    uiController.AddModuleToUI(module.ToString());
-        //    activeModules.Add(module);
-        //}
-        //throw new NotImplementedException();
+
     }
 
     private void DisableVariables(string name)
@@ -274,10 +264,10 @@ public class UIController : MonoBehaviour
     }
     public void SetGameSpeed(int SpeedMode)
     {
-        if (SpeedMode>-1)
+        if (SpeedMode > -1)
         {
             slimeManager.gameSpeed = SpeedMode;
-            
+
         }
         else
         {
