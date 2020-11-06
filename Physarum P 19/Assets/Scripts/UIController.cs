@@ -40,9 +40,10 @@ public class UIController : MonoBehaviour
     public RawImage rawImage;
     //Colors
     public Color drawColorWall;
-    public Color drawColorSlime;
+    public Color drawColorSlimeMold;
     public Color drawColorFood;
     public Color drawColorRepellent;
+    public Color drawColorSlime;
 
 
     //int pixelSize = 4;
@@ -95,6 +96,7 @@ public class UIController : MonoBehaviour
         texture2DObject.filterMode = FilterMode.Point;
         texture2DObject.Apply();
         SetAllPixel(ref texture2DObject, Color.white);
+        CreateBorder(ref texture2DObject, 2);
         rawImage.GetComponent<GridData>().viewTexture = texture2DObject;
 
         texture2DChemical = image.texture as Texture2D;
@@ -121,6 +123,39 @@ public class UIController : MonoBehaviour
             ToggleModule(newModule.GetComponentInChildren<Toggle>());
         });
     }
+    void CreateBorder(ref Texture2D texture, int thickness)
+    {
+        for (int y = 0; y < thickness; y++)
+        {
+            for (int x = 0; x < imageWidth; x++)
+            {
+                texture.SetPixel(x, y, drawColorWall);
+            }
+        }
+        for (int y = imageHeight-thickness; y < imageHeight; y++)
+        {
+            for (int x = 0; x < imageWidth; x++)
+            {
+                texture.SetPixel(x, y, drawColorWall);
+            }
+        }
+        for (int y = 0; y < imageHeight; y++)
+        {
+            for (int x = 0; x < thickness; x++)
+            {
+                texture.SetPixel(x, y, drawColorWall);
+            }
+        }
+        for (int y = 0; y < imageHeight; y++)
+        {
+            for (int x = imageWidth-thickness; x < imageWidth; x++)
+            {
+                texture.SetPixel(x, y, drawColorWall);
+            }
+        }
+        texture.Apply();
+    }
+
     //Set Drawmode and pause if its a drawable material
     public void SetDrawMode(int mode)
     {
@@ -172,7 +207,7 @@ public class UIController : MonoBehaviour
                     drawChanges = true;
                     break;
                 case Enums.DrawMode.SlimeMold:
-                    ImageAddPixel(position, drawColorSlime, texture2DObject);
+                    ImageAddPixel(position, drawColorSlimeMold, texture2DObject);
                     drawChanges = true;
                     break;
                 case Enums.DrawMode.Food:

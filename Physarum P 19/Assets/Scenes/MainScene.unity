@@ -3084,9 +3084,10 @@ MonoBehaviour:
   newPixels: []
   rawImage: {fileID: 107317282}
   drawColorWall: {r: 0, g: 0, b: 0, a: 1}
-  drawColorSlime: {r: 0.8962264, g: 0.7218011, b: 0.08877714, a: 1}
+  drawColorSlimeMold: {r: 0.9339623, g: 0.75784546, b: 0.09251513, a: 1}
   drawColorFood: {r: 0, g: 0.08628178, b: 1, a: 1}
   drawColorRepellent: {r: 1, g: 0, b: 0, a: 1}
+  drawColorSlime: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
   imageWidth: 0
   imageHeight: 0
   globalBlackColorAll: []

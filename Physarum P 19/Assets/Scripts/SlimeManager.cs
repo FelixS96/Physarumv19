@@ -143,6 +143,44 @@ public class SlimeManager : MonoBehaviour
         converted = (int)(position.y * preDefWidth + position.x);
         return converted;
     }
+    Vector2 RandomDirectionVector(int rangeX, int rangeY)
+    {
+        return new Vector2((int)UnityEngine.Random.Range(-rangeX, rangeX), (int)UnityEngine.Random.Range(-rangeY, rangeY));
+    }
+    int CalculateEnergy(Vector2 pos)
+    {
+        int calculatedEnergy = 0;
+        return calculatedEnergy;
+    }
+    Vector2 MoveOrNot(Vector2 pos)
+    {
+        Vector2 newPos = pos + RandomDirectionVector(1, 1);
+        int newEnergy = CalculateEnergy(newPos);
+        //less energy
+        if (CalculateEnergy(pos) >= newEnergy) 
+        {
+            return newPos;
+        }
+        else if(/*more energy*/true)
+        {
+            if (SuccessOfChance(newEnergy))
+            {
+                return newPos;
+            }
+        }
+        return pos;
+    }
+    bool SuccessOfChance(int energy)
+    {
+        float chance = 0.1f;
+        bool successBool = (UnityEngine.Random.value < chance);
+        return successBool;
+    }
+    void LeaveSlimeBehind(Vector2 pos)
+    {
+
+    }
+    
     //todo: gauss filter, metropolis algorithm
     private void Act()
     {
