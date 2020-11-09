@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Enums;
 
 public class UIController : MonoBehaviour
 {
@@ -32,10 +33,11 @@ public class UIController : MonoBehaviour
     [SerializeField]
     GameObject sidePanelContent;
     [SerializeField]
-    Enums.DrawMode drawMode = Enums.DrawMode.Deactivated;
+    DrawMode drawMode = DrawMode.Deactivated;
     [SerializeField]
     int drawSize = 3;
-    public List<Vector2> newPixels;
+    public List<PixelData> newPixels;
+    //public List<Vector2> newSlimePixel
     [SerializeField]
     public RawImage rawImage;
     //Colors
@@ -66,6 +68,7 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        newPixels = new List<PixelData>();
         screenWidth = Screen.width;
         screenHeight = Screen.height;
 
@@ -197,27 +200,29 @@ public class UIController : MonoBehaviour
         }
         else
         {
+            PixelData newPixel = new PixelData();
             switch (drawMode)
             {
-                case Enums.DrawMode.Deactivated:
+                case DrawMode.Deactivated:
 
                     break;
-                case Enums.DrawMode.Wall:
+                case DrawMode.Wall:
                     ImageAddPixel(position, drawColorWall, texture2DObject);
                     drawChanges = true;
                     break;
-                case Enums.DrawMode.SlimeMold:
+                case DrawMode.SlimeMold:
                     ImageAddPixel(position, drawColorSlimeMold, texture2DObject);
+                    newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
                     break;
-                case Enums.DrawMode.Food:
+                case DrawMode.Food:
                     ImageAddPixel(position, drawColorFood, texture2DObject);
-                    newPixels.Add(position);
+                    newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
                     break;
-                case Enums.DrawMode.Repellent:
+                case DrawMode.Repellent:
                     ImageAddPixel(position, drawColorRepellent, texture2DObject);
-                    newPixels.Add(position);
+                    newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
                     break;
                 default:
@@ -256,6 +261,10 @@ public class UIController : MonoBehaviour
                 Vector2 combinedVector = new Vector2(coordinate.x + i, coordinate.y + j);
                 if ((combinedVector.x > -1) && (combinedVector.x < imageWidth) && (combinedVector.y > -1) && (combinedVector.y < imageHeight))
                 {
+                    if (drawMode == DrawMode.SlimeMold)
+                    { 
+                        newPixels.Add(new PixelData(drawMode, new Vector2((int)combinedVector.x, (int)combinedVector.y)));
+                    }
                     target.SetPixel((int)combinedVector.x, (int)combinedVector.y, color);
                 }
             }

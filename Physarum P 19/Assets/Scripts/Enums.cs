@@ -51,6 +51,17 @@ public class Enums : MonoBehaviour
         //todo: add erase
 
     }
+    public struct PixelData
+    {
+        public PixelData(DrawMode type, Vector2 pos)
+        {
+            pixelType = type;
+            position = pos;
+        }
+
+        public DrawMode pixelType { get; }
+        public Vector2 position { get; }
+    }
 
     //showable layers
     public enum Layers
@@ -94,9 +105,14 @@ public class Enums : MonoBehaviour
     }
     public struct Slime
     {
+        public Slime(Vector2 pos/*, List<Influence> infs*/)
+        {
+            position = pos;
+            //influences = infs;
+        }
         public Vector2 position;
-        public float food;
-        public List<Influence> influences;
+        //public float food;
+        //public List<Influence> influences;
     }
 
 }

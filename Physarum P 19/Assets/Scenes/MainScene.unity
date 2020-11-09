@@ -3081,7 +3081,6 @@ MonoBehaviour:
   sidePanelContent: {fileID: 1651903328}
   drawMode: 0
   drawSize: 8
-  newPixels: []
   rawImage: {fileID: 107317282}
   drawColorWall: {r: 0, g: 0, b: 0, a: 1}
   drawColorSlimeMold: {r: 0.9339623, g: 0.75784546, b: 0.09251513, a: 1}
@@ -3128,8 +3127,10 @@ MonoBehaviour:
   pixelDataChem: []
   uiController: {fileID: 1059660794}
   gridData: {fileID: 0}
-  attractantEffectRange: 50
+  attractantEffectRange: 100
   repellentEffectRange: 20
+  food: 0
+  amountPixelsMoved: 1000
 --- !u!114 &1059660797
 MonoBehaviour:
   m_ObjectHideFlags: 0
