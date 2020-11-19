@@ -26,7 +26,6 @@ public class Enums : MonoBehaviour
         Sporolation,
         Splitting*/
     }
-
     public enum Repellant
     {
         variable1,
@@ -49,8 +48,24 @@ public class Enums : MonoBehaviour
         Repellent//,
         //Erase
         //todo: add erase
+    }
+    //InfluenceType
+    public enum InfluenceNames
+    {
+        LowFood,
+        IntenseLight,
+        FoodSource,
+        Repellent,
+        Attractant
+    } 
+    //showable layers
+    public enum Layers
+    {
+        Object,
+        Chemical
 
     }
+    //Position and Color
     public struct PixelData
     {
         public PixelData(DrawMode type, Vector2 pos)
@@ -61,14 +76,6 @@ public class Enums : MonoBehaviour
 
         public DrawMode pixelType { get; }
         public Vector2 position { get; }
-    }
-
-    //showable layers
-    public enum Layers
-    {
-        Object,
-        Chemical
-
     }
     //pixel made out of vector2 and color
     public struct Pixel
@@ -82,15 +89,7 @@ public class Enums : MonoBehaviour
         public Color color { get; }
 
     }
-    public enum InfluenceNames
-    {
-        LowFood,
-        IntenseLight,
-        FoodSource,
-        Repellent,
-        Attractant
-    } 
-
+    //Influence type with a strenght with a Vector to
     public struct Influence
     {
         public Influence(InfluenceNames influenceName,int strenghtI,Vector2 targetPosI)
@@ -103,9 +102,10 @@ public class Enums : MonoBehaviour
         public int strenght;
         public Vector2 targetPos;
     }
-    public struct Slime
+    //SlimeMold
+    public struct SlimeMold
     {
-        public Slime(Vector2 pos/*, List<Influence> infs*/)
+        public SlimeMold(Vector2 pos/*, List<Influence> infs*/)
         {
             position = pos;
             //influences = infs;
@@ -114,5 +114,4 @@ public class Enums : MonoBehaviour
         //public float food;
         //public List<Influence> influences;
     }
-
 }

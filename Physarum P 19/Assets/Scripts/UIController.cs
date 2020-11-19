@@ -10,9 +10,10 @@ public class UIController : MonoBehaviour
 {
     //Scripts
     [SerializeField]
-    SlimeManager slimeManager;
+    SlimeManager slimeMoldManager;
     [SerializeField]
     GridData gridData;
+
     //Text
     [SerializeField]
     TextMeshProUGUI playPauseButton;
@@ -20,6 +21,7 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI fastButton;
     [SerializeField]
     TextMeshProUGUI timeDisplay;
+
     //Panels
     [SerializeField]
     GameObject sidePanel;
@@ -37,7 +39,8 @@ public class UIController : MonoBehaviour
     [SerializeField]
     int drawSize = 3;
     public List<PixelData> newPixels;
-    //public List<Vector2> newSlimePixel
+
+    //Imagecomponents
     [SerializeField]
     public RawImage rawImage;
     //Colors
@@ -46,10 +49,8 @@ public class UIController : MonoBehaviour
     public Color drawColorFood;
     public Color drawColorRepellent;
     public Color drawColorSlime;
-
-
-    //int pixelSize = 4;
-    //image and screendata
+    
+    //Image and Screendata
     int deadZoneLeft = 160;
     int deadZoneDown = 135;
     public int imageWidth;
@@ -57,7 +58,7 @@ public class UIController : MonoBehaviour
     private int screenWidth;
     private int screenHeight;
 
-    //texturedata
+    //Texturedata
     RectTransform rect;
     [SerializeField]
     public Color[] globalBlackColorAll;
@@ -68,24 +69,26 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Set Values
+        gridData = FindObjectOfType<GridData>();
         newPixels = new List<PixelData>();
         screenWidth = Screen.width;
         screenHeight = Screen.height;
+        modulePrefab = Resources.Load("modulePrefab") as GameObject;
+        slimeMoldManager = this.GetComponent<SlimeManager>();
 
         //Deactivate Panels
         sidePanel.SetActive(false);
         editorPanel.SetActive(false);
-        gridData = FindObjectOfType<GridData>();
         FillArray();
 
         SetupImage(rawImage);
-        slimeManager.pixelDataChem = texture2DChemical.GetPixels();
+        slimeMoldManager.pixelDataChem = texture2DChemical.GetPixels();
         drawMode = Enums.DrawMode.Deactivated;
-
-        modulePrefab = Resources.Load("modulePrefab") as GameObject;
+        
         SetUIData(true);
-        SetVariablesInSlime(true);
-        slimeManager = this.GetComponent<SlimeManager>();
+        SetVariablesInSlimeMold(true);
+        
     }
 
     void SetupImage(RawImage image)
@@ -310,12 +313,12 @@ public class UIController : MonoBehaviour
     {
         if (SpeedMode > -1)
         {
-            slimeManager.gameSpeed = SpeedMode;
+            slimeMoldManager.gameSpeed = SpeedMode;
 
         }
         else
         {
-            slimeManager.gameSpeed = 0;
+            slimeMoldManager.gameSpeed = 0;
         }
         if (SpeedMode > 0)
         {
@@ -330,14 +333,14 @@ public class UIController : MonoBehaviour
     public void ToggleGameSpeed()
     {
         SetDrawMode(0);
-        if (slimeManager.gameSpeed == (int)Enums.GameSpeed.FastMode || slimeManager.gameSpeed == (int)Enums.GameSpeed.Play)
+        if (slimeMoldManager.gameSpeed == (int)Enums.GameSpeed.FastMode || slimeMoldManager.gameSpeed == (int)Enums.GameSpeed.Play)
         {
-            slimeManager.gameSpeed = (int)Enums.GameSpeed.Pause;
+            slimeMoldManager.gameSpeed = (int)Enums.GameSpeed.Pause;
             playPauseButton.text = "Play";
         }
         else
         {
-            slimeManager.gameSpeed = (int)Enums.GameSpeed.Play;
+            slimeMoldManager.gameSpeed = (int)Enums.GameSpeed.Play;
             playPauseButton.text = "Pause";
 
             editorPanel.SetActive(false);
@@ -356,7 +359,7 @@ public class UIController : MonoBehaviour
     {
 
     }
-    public void SetVariablesInSlime(bool reset)
+    public void SetVariablesInSlimeMold(bool reset)
     {
 
     }

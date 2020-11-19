@@ -23,7 +23,7 @@ public class SlimeManager : MonoBehaviour
     List<Pixel> finishedPixels = new List<Pixel>();
 
     [SerializeField]
-    List<Slime> slimePixel;
+    List<SlimeMold> slimeMoldPixel;
     [SerializeField]
     Color[] pixelDataObj;
     [SerializeField]
@@ -56,7 +56,7 @@ public class SlimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        slimePixel = new List<Slime>();
+        slimeMoldPixel = new List<SlimeMold>();
         timePassedUI = 0;
         foreach (Modules module in (Modules[])Enum.GetValues(typeof(Modules)))
         {
@@ -82,7 +82,7 @@ public class SlimeManager : MonoBehaviour
             uiController.drawChanges = false;
             calculating = true;
             GetInformation();
-            AddSlimeToList();
+            AddSlimeMoldToList();
             StartCoroutine(GenerateChemicalMap());
         }
         if (!calculating)
@@ -91,8 +91,8 @@ public class SlimeManager : MonoBehaviour
             uiController.SetTimeUI(timePassedUI);
             SpreadChemicals(speed);
             CheckForFood();
-            MoveSlime(speed, amountPixelsMoved);
-            DrawNewSlime();
+            MoveSlimeMold(speed, amountPixelsMoved);
+            DrawNewSlimeMold();
         }
         else
         {
@@ -103,49 +103,49 @@ public class SlimeManager : MonoBehaviour
 
     private void CheckForFood()
     {
-        for (int i = 0; i < slimePixel.Count; i++)
+        for (int i = 0; i < slimeMoldPixel.Count; i++)
         {
-            if (pixelDataObj[ConvertPositionTo1D(slimePixel[i].position)] == uiController.drawColorFood)
+            if (pixelDataObj[ConvertPositionTo1D(slimeMoldPixel[i].position)] == uiController.drawColorFood)
             {
                 food += 1.0f;
             }
-            else if(pixelDataChem[ConvertPositionTo1D(slimePixel[i].position)].b>0)
+            else if(pixelDataChem[ConvertPositionTo1D(slimeMoldPixel[i].position)].b>0)
             {
-                food += (0.1f * pixelDataChem[ConvertPositionTo1D(slimePixel[i].position)].b);
+                food += (0.1f * pixelDataChem[ConvertPositionTo1D(slimeMoldPixel[i].position)].b);
             }
         }
     }
 
-    private void DrawNewSlime()
+    private void DrawNewSlimeMold()
     {
-        if (slimePixel.Count > 0)
+        if (slimeMoldPixel.Count > 0)
         {
-            for (int i = 0; i < slimePixel.Count; i++)
+            for (int i = 0; i < slimeMoldPixel.Count; i++)
             {
-                pixelDataObj[ConvertPositionTo1D(slimePixel[i].position)] = uiController.drawColorSlimeMold;
+                pixelDataObj[ConvertPositionTo1D(slimeMoldPixel[i].position)] = uiController.drawColorSlimeMold;
             }
             gridData.viewTexture.SetPixels(0, 0, uiController.imageWidth, uiController.imageHeight, pixelDataObj);
             gridData.viewTexture.Apply();
         }
     }
 
-    void AddSlimeToList()
+    void AddSlimeMoldToList()
     {
         for (int i = 0; i < uiController.newPixels.Count; i++)
         {
             if (uiController.newPixels[i].pixelType == DrawMode.SlimeMold)
             {
-                Slime newSlime = new Slime(uiController.newPixels[i].position);
-                if(!slimePixel.Contains(newSlime))
+                SlimeMold newSlimeMold = new SlimeMold(uiController.newPixels[i].position);
+                if(!slimeMoldPixel.Contains(newSlimeMold))
                 {
-                    slimePixel.Add(newSlime);
+                    slimeMoldPixel.Add(newSlimeMold);
                     food += startFood;
                 }
             }
         }
-        //for (int i = 0; i < slimePixel.Count; i++)
+        //for (int i = 0; i < slimeMoldPixel.Count; i++)
         //{
-        //    Debug.Log("New pixel at " + slimePixel[i].position.x + " , " + slimePixel[i].position.y);
+        //    Debug.Log("New pixel at " + slimeMoldPixel[i].position.x + " , " + slimeMoldPixel[i].position.y);
         //}
     }
     private void SpreadChemicals(int speed)
@@ -153,50 +153,51 @@ public class SlimeManager : MonoBehaviour
         //throw new NotImplementedException();
     }
     //todo generate new slimemold pixel
-    private void MoveSlime(int speed, int countPixel)
+    //Move SlimeMold with Speed and move Count Pixel per use
+    private void MoveSlimeMold(int speed, int countPixel)
     {
-        List<Slime> localSlimePixels = new List<Slime>();
-        if (countPixel <= slimePixel.Count)
+        List<SlimeMold> localSlimeMoldPixels = new List<SlimeMold>();
+        if (countPixel <= slimeMoldPixel.Count)
         {
-            //Debug.Log("amount to check<=Count");
+            //amount to check<=Count;
             for (int i = 0; i < countPixel; i++)
             {
-                int random = UnityEngine.Random.Range(0, slimePixel.Count - 1);
-                Slime slime = slimePixel[random];
-                if (localSlimePixels.Contains(slime))
+                int random = UnityEngine.Random.Range(0, slimeMoldPixel.Count - 1);
+                SlimeMold slimeMold = slimeMoldPixel[random];
+                if (localSlimeMoldPixels.Contains(slimeMold))
                 {
                     //i--;
                 }
                 else
                 {
-                    localSlimePixels.Add(slime);
+                    localSlimeMoldPixels.Add(slimeMold);
                 }
             }
         }
         else
         {
-            //Debug.Log("else");
-            for (int i = 0; i < slimePixel.Count; i++)
+            //
+            for (int i = 0; i < slimeMoldPixel.Count; i++)
             {
-                int random = UnityEngine.Random.Range(0, slimePixel.Count - 1);
-                Slime slime = slimePixel[random];
-                localSlimePixels.Add(slime);
-                if (localSlimePixels.Contains(slime))
+                int random = UnityEngine.Random.Range(0, slimeMoldPixel.Count - 1);
+                SlimeMold slimeMold = slimeMoldPixel[random];
+                localSlimeMoldPixels.Add(slimeMold);
+                if (localSlimeMoldPixels.Contains(slimeMold))
                 {
                     //i--;
                 }
                 else
                 {
-                    localSlimePixels.Add(slime);
+                    localSlimeMoldPixels.Add(slimeMold);
                 }
             }
         }
 
         //new list filled with countPixel
-        for (int i = 0; i < localSlimePixels.Count; i++)
+        for (int i = 0; i < localSlimeMoldPixels.Count; i++)
         {
-            int count = slimePixel.FindIndex(item => item.position == localSlimePixels[i].position);
-            Slime currentSlime = new Slime(MoveOrNot(localSlimePixels[i].position));
+            int count = slimeMoldPixel.FindIndex(item => item.position == localSlimeMoldPixels[i].position);
+            SlimeMold currentSlime = new SlimeMold(MoveOrNot(localSlimeMoldPixels[i].position));
             if (count == -1)
             {
                 //todo Debug.Log("WTF");
@@ -204,7 +205,7 @@ public class SlimeManager : MonoBehaviour
             else
             {
 
-                slimePixel[count] = currentSlime;
+                slimeMoldPixel[count] = currentSlime;
             }
             //make pixels stay together
         }
@@ -218,16 +219,16 @@ public class SlimeManager : MonoBehaviour
     }
     //void CopySlime()
     //{
-    //    slimePixel = new List<Slime>();
+    //    slimeMoldPixel = new List<SlimeMold>();
     //    for (int i = 0; i < pixelDataObj.Length; i++)
     //    {
     //        if (pixelDataObj[i] == uiController.drawColorSlimeMold)
     //        {
-    //            slimePixel.Add()
+    //            slimeMoldPixel.Add()
     //        }
     //    }
     //}
-    //Influence GetHighestImportance(Slime slime)
+    //Influence GetHighestImportance(SlimeMold slime)
     //{
     //    Influence highestInfluence = new Influence(InfluenceNames.LowFood, 0, new Vector2(0, 0));
     //    foreach (Influence influence in slime.influences)
@@ -289,6 +290,7 @@ public class SlimeManager : MonoBehaviour
     {
         return new Vector2((int)UnityEngine.Random.Range(-rangeX, rangeX+1), (int)UnityEngine.Random.Range(-rangeY, rangeY+1));
     }
+    //Calculate Energy of a Position and return an int
     int CalculateEnergy(Vector2 pos)
     {
         int calculatedEnergy = 0;
@@ -312,21 +314,24 @@ public class SlimeManager : MonoBehaviour
         }
         return calculatedEnergy;
     }
+    //Moves the Slimemoldpixel to a new Position or not and returns the Position
     Vector2 MoveOrNot(Vector2 pos)
     {
+        //Create a new Position with a random Vector and the old Pos
         Vector2 newPos = pos + RandomDirectionVector(1, 1);
+        //calculate Energy of old and new Position and difference
         int newEnergy = CalculateEnergy(newPos);
         int oldEnergy = CalculateEnergy(pos);
-        //todo slower with lower food
-        //less energy
+        int deltaE = newEnergy - oldEnergy;
+        //less energy = goes to new pos
         if (oldEnergy >= newEnergy) 
         {
             food-=0.01f;
             return newPos;
         }
+        //more energy = Chance to move
         else if(newEnergy > oldEnergy)
         {
-            int deltaE = newEnergy - oldEnergy;
             if (SuccessOfChance(deltaE)) 
             {
                 //add deltaE to food calculation
@@ -341,7 +346,14 @@ public class SlimeManager : MonoBehaviour
         float chance = Math.Min(1, (float)deltaEnergy/1000/*Math.Exp(-(deltaEnergy/0.1))*/);
         //Debug.Log("Energydifference: " + deltaEnergy + " chance: " + chance);
         bool successBool = (UnityEngine.Random.value < chance);
-        return successBool;
+        if (deltaEnergy < 10000)
+        {
+            return successBool;
+        }
+        else
+        {
+            return false;
+        }
     }
     void LeaveSlimeBehind(Vector2 pos)
     {
@@ -363,12 +375,12 @@ public class SlimeManager : MonoBehaviour
     {
         target[ConvertPositionTo1D(new Vector2(pos.x, pos.y))] = color;
     }
+    //Gets all Pixeldata and writes it into array
     void GetDataFromTexture(Texture2D texture, ref Color[] data)
     {
         int width = uiController.imageWidth;
         int height = uiController.imageHeight;
         data = texture.GetPixels(0, 0, width, height);
-        //UnityEngine.Debug.Log("Testcolor0: " + data[0]);
     }
     void SetDataInTexture(Texture2D texture, Color[] data)
     {

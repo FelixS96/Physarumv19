@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField]
     UIController uiController;
     // Start is called before the first frame update
     void Start()
     {
-
+        //Set UIController
+        uiController = FindObjectOfType<UIController>();
     }
 
     // Update is called once per frame
@@ -33,15 +33,12 @@ public class InputManager : MonoBehaviour
                 //Debug.Log("EditorDown");
             }
         }
+
+        //On Leftclick
         if (Input.GetMouseButton(0))
         {
-            uiController.DrawAtCoordinate(uiController.ReturnGrid(GetMousePos()));
+            //Draw at Mouse Coordinate
+            uiController.DrawAtCoordinate(uiController.ReturnGrid(Input.mousePosition));
         }
-    }
-    Vector2 GetMousePos()
-    {
-        Vector2 vector;
-        vector = new Vector2((int)Input.mousePosition.x, (int)Input.mousePosition.y);
-        return vector;
     }
 }

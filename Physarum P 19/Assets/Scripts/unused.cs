@@ -16,6 +16,12 @@ public class unused : MonoBehaviour
     //    Slime
     //}
 
+    //Returns MousPosition
+    Vector2 GetMousePos()
+    {
+        return new Vector2((int)Input.mousePosition.x, (int)Input.mousePosition.y);
+    }
+
     private void AddVariables(string name)
     {
         //foreach (Enums.name module in (Enums.Modules[])Enum.GetValues(typeof(Enums.name)))

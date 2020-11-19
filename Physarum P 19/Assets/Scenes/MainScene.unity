@@ -926,7 +926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &275397106
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3068,7 +3068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32130ab545e241f4e9c279977c3cacfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slimeManager: {fileID: 1059660796}
+  slimeMoldManager: {fileID: 0}
   gridData: {fileID: 0}
   playPauseButton: {fileID: 446802011}
   fastButton: {fileID: 976392509}
@@ -3080,7 +3080,7 @@ MonoBehaviour:
     type: 3}
   sidePanelContent: {fileID: 1651903328}
   drawMode: 0
-  drawSize: 8
+  drawSize: 4
   rawImage: {fileID: 107317282}
   drawColorWall: {r: 0, g: 0, b: 0, a: 1}
   drawColorSlimeMold: {r: 0.9339623, g: 0.75784546, b: 0.09251513, a: 1}
@@ -3143,7 +3143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8538d87baa5a6c245853852bf3076b53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiController: {fileID: 1059660794}
 --- !u!1 &1155556993
 GameObject:
   m_ObjectHideFlags: 0
@@ -4999,7 +4998,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1767082404
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6288,7 +6287,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Toggle Image
+  m_text: Toggle visible Image
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6357,10 +6356,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2041626029}
-    characterCount: 12
+    characterCount: 20
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
