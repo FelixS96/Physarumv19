@@ -114,4 +114,12 @@ public class Enums : MonoBehaviour
         //public float food;
         //public List<Influence> influences;
     }
+    public struct Pos
+    {
+        public Pos(Vector2 pos)
+        {
+            position = pos;
+        }
+        public Vector2 position { get; }
+    }
 }

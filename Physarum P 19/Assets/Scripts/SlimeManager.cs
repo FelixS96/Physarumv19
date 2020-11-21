@@ -24,10 +24,13 @@ public class SlimeManager : MonoBehaviour
 
     [SerializeField]
     List<SlimeMold> slimeMoldPixel;
+    //[SerializeField]
+    //List<SlimeMold> leftSlimeMoldPixel;
     [SerializeField]
     Color[] pixelDataObj;
     [SerializeField]
     public Color[] pixelDataChem;
+    List<Pos> slime;
     //todo add slimelist
 
     [SerializeField]
@@ -35,19 +38,22 @@ public class SlimeManager : MonoBehaviour
     [SerializeField]
     GridData gridData;
 
-    public int attractantEffectRange;
-    public int repellentEffectRange;
+    
     [SerializeField]
     float food;
 
     #endregion
+    public bool chemicalDetecting; //other detection not in yet
+    public bool slimeTrail; //repelling slime left behind
 
     #region UserChangeable
     //variables that can be changed by the user
     [SerializeField]
-    int amountPixelsMoved = 100;
+    public int amountPixelsMoved = 100;
     float startFood = 100;
-
+    public float slimeRepellentStrenght = 0.01f;
+    public int attractantEffectRange;
+    public int repellentEffectRange;
     #endregion
     void Awake()
     {
@@ -56,14 +62,15 @@ public class SlimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        slime = new List<Pos>();
         slimeMoldPixel = new List<SlimeMold>();
         timePassedUI = 0;
-        foreach (Modules module in (Modules[])Enum.GetValues(typeof(Modules)))
-        {
-            PlayerPrefs.SetInt(module.ToString(), 1);
-            uiController.AddModuleToUI(module);
-            activeModules.Add(module);
-        }
+        //foreach (Modules module in (Modules[])Enum.GetValues(typeof(Modules)))
+        //{
+        //    PlayerPrefs.SetInt(module.ToString(), 1);
+        //    uiController.AddModuleToUI(module);
+        //    activeModules.Add(module);
+        //}
         gridData = FindObjectOfType<GridData>();
     }
 
@@ -72,10 +79,43 @@ public class SlimeManager : MonoBehaviour
     {
         if (gameSpeed > 0)
         {
-            simulateWithSpeed(gameSpeed);
+            SimulateWithSpeed(gameSpeed);
         }
     }
-    void simulateWithSpeed(int speed)
+    //Do tasks for the slimemold
+    void SimulateWithSpeed(int speed)
+    {
+        //if changes were made by drawing
+        if (uiController.drawChanges && !calculating)
+        {
+            uiController.drawChanges = false;
+            calculating = true;
+            GetInformation();
+            AddSlimeMoldToList();
+            StartCoroutine(GenerateChemicalMap());
+        }
+        //while not calculating = while normal runtime
+        if (!calculating)
+        {
+            timePassedUI += speed;
+            uiController.SetTimeUI(timePassedUI);
+            SpreadChemicals(speed);
+            CheckForFood();
+            MoveSlimeMold(speed, amountPixelsMoved);
+            DrawNewSlimeMold();
+            if (slimeTrail)
+            {
+                LeaveSlimeBehind(ref slime);
+            }
+        }
+        //pause while calculation
+        else
+        {
+            uiController.SetGameSpeed(0);
+        }
+        
+    }
+    public void Calculate()
     {
         if (uiController.drawChanges && !calculating)
         {
@@ -85,20 +125,6 @@ public class SlimeManager : MonoBehaviour
             AddSlimeMoldToList();
             StartCoroutine(GenerateChemicalMap());
         }
-        if (!calculating)
-        {
-            timePassedUI += speed;
-            uiController.SetTimeUI(timePassedUI);
-            SpreadChemicals(speed);
-            CheckForFood();
-            MoveSlimeMold(speed, amountPixelsMoved);
-            DrawNewSlimeMold();
-        }
-        else
-        {
-            uiController.SetGameSpeed(0);
-        }
-        
     }
 
     private void CheckForFood()
@@ -181,31 +207,38 @@ public class SlimeManager : MonoBehaviour
             {
                 int random = UnityEngine.Random.Range(0, slimeMoldPixel.Count - 1);
                 SlimeMold slimeMold = slimeMoldPixel[random];
-                localSlimeMoldPixels.Add(slimeMold);
+                //localSlimeMoldPixels.Add(slimeMold);
                 if (localSlimeMoldPixels.Contains(slimeMold))
                 {
                     //i--;
                 }
                 else
                 {
-                    localSlimeMoldPixels.Add(slimeMold);
+                    if (HasAnEpmtySpaceAround(slimeMold.position)){
+                        localSlimeMoldPixels.Add(slimeMold);
+                    }
                 }
             }
         }
-
+        Debug.Log("Chosen Pixels "+localSlimeMoldPixels.Count);
         //new list filled with countPixel
         for (int i = 0; i < localSlimeMoldPixels.Count; i++)
         {
             int count = slimeMoldPixel.FindIndex(item => item.position == localSlimeMoldPixels[i].position);
-            SlimeMold currentSlime = new SlimeMold(MoveOrNot(localSlimeMoldPixels[i].position));
             if (count == -1)
             {
-                //todo Debug.Log("WTF");
+                //todo 
+                Debug.Log("Error");
             }
             else
             {
-
+                //pixelDataObj[ConvertPositionTo1D(slimeMoldPixel[count].position)]
+                pixelDataObj[ConvertPositionTo1D(localSlimeMoldPixels[i].position)] = Color.white;//nur wenn bewegt
+                slime.Add(new Pos(slimeMoldPixel[count].position));
+                //pixelDataChem[ConvertPositionTo1D(slimeMoldPixel[count].position)]
+                SlimeMold currentSlime = new SlimeMold(MoveOrNot(localSlimeMoldPixels[i].position));
                 slimeMoldPixel[count] = currentSlime;
+                
             }
             //make pixels stay together
         }
@@ -279,13 +312,14 @@ public class SlimeManager : MonoBehaviour
         }
         return returnColor;
     }
-
+    //convert 2d position to 1d array
     int ConvertPositionTo1D(Vector2 position)
     {
         int converted;
         converted = (int)(position.y * preDefWidth + position.x);
         return converted;
     }
+    //create a vector2 from -rangx and -rangey to rangex and rangey
     Vector2 RandomDirectionVector(int rangeX, int rangeY)
     {
         return new Vector2((int)UnityEngine.Random.Range(-rangeX, rangeX+1), (int)UnityEngine.Random.Range(-rangeY, rangeY+1));
@@ -312,7 +346,15 @@ public class SlimeManager : MonoBehaviour
                 calculatedEnergy += (int)(colorChem.r * 1000);
             }
         }
-        return calculatedEnergy;
+        if (chemicalDetecting)
+        {
+
+            return calculatedEnergy;
+        }
+        else
+        {
+            return 0;
+        }
     }
     //Moves the Slimemoldpixel to a new Position or not and returns the Position
     Vector2 MoveOrNot(Vector2 pos)
@@ -324,23 +366,64 @@ public class SlimeManager : MonoBehaviour
         int oldEnergy = CalculateEnergy(pos);
         int deltaE = newEnergy - oldEnergy;
         //less energy = goes to new pos
-        if (oldEnergy >= newEnergy) 
+        if (HasSlimeMoldAround(newPos))
         {
-            food-=0.01f;
-            return newPos;
-        }
-        //more energy = Chance to move
-        else if(newEnergy > oldEnergy)
-        {
-            if (SuccessOfChance(deltaE)) 
+            if (oldEnergy >= newEnergy)
             {
-                //add deltaE to food calculation
-                food-=0.02f;
+                food -= 0.01f;
                 return newPos;
+            }
+            //more energy = Chance to move
+            else if (newEnergy > oldEnergy)
+            {
+                if (SuccessOfChance(deltaE))
+                {
+                    //add deltaE to food calculation
+                    food -= 0.02f;
+                    return newPos;
+                }
             }
         }
         return pos;
     }
+    private bool HasAnEpmtySpaceAround(Vector2 pos)
+    {
+        bool returnVal = false;
+        for (int x = -1; x < 1; x++)
+        {
+            for (int y = -1; y < 1; y++)
+            {
+                if (pixelDataObj[ConvertPositionTo1D(pos + new Vector2(x, y))] == Color.white)
+                {
+                    Debug.Log("Is true");
+                    return true;
+                }
+                //if()
+                //newPos + new Vector2(x, y);
+            }
+        }
+        return returnVal;
+    }
+    //check surrounding pixels for slimemold
+    private bool HasSlimeMoldAround(Vector2 newPos)
+    {
+        bool returnVal = false;
+        for (int x = -1; x < 1; x++)
+        {
+            for (int y =- 1; y < 1; y++)
+            {
+                if(pixelDataObj[ConvertPositionTo1D(newPos + new Vector2(x, y))] == uiController.drawColorSlimeMold)
+                {
+                    //Debug.Log("Is true");
+                    return true;
+                }
+                //if()
+                //newPos + new Vector2(x, y);
+            }
+        }
+        return returnVal;
+    }
+
     bool SuccessOfChance(int deltaEnergy)
     {
         float chance = Math.Min(1, (float)deltaEnergy/1000/*Math.Exp(-(deltaEnergy/0.1))*/);
@@ -355,9 +438,20 @@ public class SlimeManager : MonoBehaviour
             return false;
         }
     }
-    void LeaveSlimeBehind(Vector2 pos)
+    void LeaveSlimeBehind(ref List<Pos> leftAreas)
     {
-
+        foreach (Pos position in leftAreas)
+        {
+            Color gotColor = pixelDataChem[ConvertPositionTo1D(position.position)];
+            if (gotColor.r <= 0.9)
+            {
+                gotColor.r += slimeRepellentStrenght;
+            }
+            pixelDataChem[ConvertPositionTo1D(position.position)] = gotColor;
+        }
+        gridData.chemicalTexture.SetPixels(pixelDataChem);
+        gridData.chemicalTexture.Apply();
+        leftAreas.Clear();
     }
     
     //todo: gauss filter, metropolis algorithm
@@ -412,7 +506,7 @@ public class SlimeManager : MonoBehaviour
                         //Parallel.For((0 - attractantEffectRange), attractantEffectRange, xx =>
                         {
                             Vector2 effectPosition = new Vector2(xx + currentPosition.x, yy + currentPosition.y);
-                            if ((effectPosition.x > -1) && (effectPosition.x < preDefWidth) && (effectPosition.y > -1) && (effectPosition.y < preDefHeight))
+                            if ((pixelDataObj[ConvertPositionTo1D(effectPosition)]!=Color.black)&&(effectPosition.x > -1) && (effectPosition.x < preDefWidth) && (effectPosition.y > -1) && (effectPosition.y < preDefHeight))
                             {
                                 float distance = Vector2.Distance(currentPosition, effectPosition);
                                 Color currentColor = pixelDataChem[ConvertPositionTo1D(effectPosition)];
@@ -444,5 +538,6 @@ public class SlimeManager : MonoBehaviour
         calculating = false;
         Debug.Log(Time.realtimeSinceStartup - calculationTime + " for calculation");
         uiController.newPixels.Clear();
+        uiController.calculatePanel.SetActive(false);
     }
 }

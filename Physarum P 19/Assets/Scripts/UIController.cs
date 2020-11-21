@@ -35,10 +35,17 @@ public class UIController : MonoBehaviour
     [SerializeField]
     GameObject sidePanelContent;
     [SerializeField]
+    public GameObject calculatePanel;
+    [SerializeField]
     DrawMode drawMode = DrawMode.Deactivated;
     [SerializeField]
     int drawSize = 3;
     public List<PixelData> newPixels;
+
+    [SerializeField]
+    List<GameObject> chemoGroup;
+    [SerializeField]
+    List<GameObject> trailGroup;
 
     //Imagecomponents
     [SerializeField]
@@ -177,23 +184,58 @@ public class UIController : MonoBehaviour
     {
 
     }
+    public void OnEndEditPixelsMoved(TMP_InputField value)
+    {
+        slimeMoldManager.amountPixelsMoved = int.Parse(value.text);
+    }
+    public void OnEndEditRepellent(TMP_InputField value)
+    {
+        Debug.Log(value.text);
+        float result = slimeMoldManager.slimeRepellentStrenght;
+        if(float.TryParse(value.text,out result))
+        {
+            Debug.Log("got " + result);
+            slimeMoldManager.slimeRepellentStrenght = result;
+        }
+    }
+
+
     public void ToggleModule(Toggle toggle)
     {
         Debug.Log("ToggleModule");
         string name = toggle.gameObject.transform.parent.name;
-        if (toggle.isOn)
+        
+        AddVariables(name);
+        if (toggle.transform.parent.name.Contains("Chemo"))
         {
-            AddVariables(name);
+            slimeMoldManager.chemicalDetecting = !slimeMoldManager.chemicalDetecting;
+            for (int i = 0; i < chemoGroup.Count; i++)
+            {
+                chemoGroup[i].SetActive(slimeMoldManager.chemicalDetecting);
+            }
         }
-        else
+        else if(toggle.transform.parent.name.Contains("Trail"))
         {
-            DisableVariables(name);
+            slimeMoldManager.slimeTrail = !slimeMoldManager.slimeTrail;
+            for (int i = 0; i < trailGroup.Count; i++)
+            {
+                trailGroup[i].SetActive(slimeMoldManager.slimeTrail);
+            }
         }
+        
     }
     public Vector2 ReturnGrid(Vector2 coordinate)
     {
         //Debug.Log("MouseLeft:x " + returnValue.x + " y " + returnValue.y);
         return new Vector2((int)coordinate.x - ((screenWidth - imageWidth) / 2), (int)coordinate.y - ((screenHeight - imageHeight) / 2));
+    }
+    void ActivateCalculationPanel()
+    {
+        calculatePanel.SetActive(true);
+    }
+    public void DeactivateCalculationPanel()
+    {
+        calculatePanel.SetActive(false);
     }
     public void DrawAtCoordinate(Vector2 position)
     {
@@ -212,21 +254,25 @@ public class UIController : MonoBehaviour
                 case DrawMode.Wall:
                     ImageAddPixel(position, drawColorWall, texture2DObject);
                     drawChanges = true;
+                    ActivateCalculationPanel();
                     break;
                 case DrawMode.SlimeMold:
                     ImageAddPixel(position, drawColorSlimeMold, texture2DObject);
                     newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
+                    ActivateCalculationPanel();
                     break;
                 case DrawMode.Food:
                     ImageAddPixel(position, drawColorFood, texture2DObject);
                     newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
+                    ActivateCalculationPanel();
                     break;
                 case DrawMode.Repellent:
                     ImageAddPixel(position, drawColorRepellent, texture2DObject);
                     newPixels.Add(new PixelData(drawMode, position));
                     drawChanges = true;
+                    ActivateCalculationPanel();
                     break;
                 default:
                     break;

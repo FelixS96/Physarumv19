@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: Hierarchy
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 616}
+  m_MinSize: {x: 950, y: 594}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -45,7 +45,7 @@ MonoBehaviour:
     y: 0
     width: 1264
     height: 1342
-  m_MinSize: {x: 950, y: 616}
+  m_MinSize: {x: 950, y: 594}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -112,10 +112,10 @@ MonoBehaviour:
     y: 30
     width: 1264
     height: 1292
-  m_MinSize: {x: 683, y: 566}
-  m_MaxSize: {x: 18008, y: 14044}
+  m_MinSize: {x: 681, y: 544}
+  m_MaxSize: {x: 18006, y: 14044}
   vertical: 0
-  controlID: 1999
+  controlID: 983
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -164,10 +164,10 @@ MonoBehaviour:
     y: 0
     width: 733
     height: 1292
-  m_MinSize: {x: 204, y: 566}
-  m_MaxSize: {x: 4004, y: 12066}
+  m_MinSize: {x: 204, y: 544}
+  m_MaxSize: {x: 4004, y: 12044}
   vertical: 1
-  controlID: 2000
+  controlID: 984
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 344}
   m_MaxSize: {x: 10002, y: 14044}
   vertical: 1
-  controlID: 2099
+  controlID: 1013
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -434,9 +434,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 20310000
-      m_LastClickedID: 12576
-      m_ExpandedIDs: 6afbffff2230000044300000e6300000c2310000cc310000ea310000fc31000018320000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -496,9 +496,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 960, y: 540, z: 0}
+    m_Target: {x: 1845.012, y: 794.5, z: 0}
     speed: 2
-    m_Value: {x: 960, y: 540, z: 0}
+    m_Value: {x: 1845.012, y: 794.5, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 2
@@ -531,9 +531,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 1684.4866
+    m_Target: 167.36728
     speed: 2
-    m_Value: 1684.4866
+    m_Value: 167.36728
   m_Ortho:
     m_Target: 0
     speed: 2
