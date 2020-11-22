@@ -232,15 +232,12 @@ public class SlimeManager : MonoBehaviour
             }
             else
             {
-                //pixelDataObj[ConvertPositionTo1D(slimeMoldPixel[count].position)]
                 pixelDataObj[ConvertPositionTo1D(localSlimeMoldPixels[i].position)] = Color.white;//nur wenn bewegt
                 slime.Add(new Pos(slimeMoldPixel[count].position));
-                //pixelDataChem[ConvertPositionTo1D(slimeMoldPixel[count].position)]
                 SlimeMold currentSlime = new SlimeMold(MoveOrNot(localSlimeMoldPixels[i].position));
                 slimeMoldPixel[count] = currentSlime;
-                
+
             }
-            //make pixels stay together
         }
     }
 
