@@ -69,41 +69,41 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9908}
     - Class: 114
-      Script: {instanceID: 10076}
+      Script: {instanceID: 10078}
     - Class: 114
-      Script: {instanceID: 10168}
+      Script: {instanceID: 10170}
     - Class: 114
-      Script: {instanceID: 10180}
+      Script: {instanceID: 10182}
     - Class: 114
-      Script: {instanceID: 10254}
+      Script: {instanceID: 10256}
     - Class: 114
-      Script: {instanceID: 10274}
+      Script: {instanceID: 10276}
     - Class: 114
-      Script: {instanceID: 10350}
+      Script: {instanceID: 10352}
     - Class: 114
-      Script: {instanceID: 10418}
+      Script: {instanceID: 10420}
     - Class: 114
-      Script: {instanceID: 10590}
+      Script: {instanceID: 10592}
     - Class: 114
-      Script: {instanceID: 10610}
+      Script: {instanceID: 10612}
     - Class: 114
-      Script: {instanceID: 10798}
+      Script: {instanceID: 10800}
     - Class: 114
-      Script: {instanceID: 10812}
+      Script: {instanceID: 10814}
     - Class: 114
-      Script: {instanceID: 10924}
+      Script: {instanceID: 10926}
     - Class: 114
-      Script: {instanceID: 10974}
+      Script: {instanceID: 10976}
     - Class: 114
-      Script: {instanceID: 10994}
+      Script: {instanceID: 10996}
     - Class: 114
-      Script: {instanceID: 11036}
+      Script: {instanceID: 11038}
     - Class: 114
-      Script: {instanceID: 11182}
+      Script: {instanceID: 11184}
     - Class: 114
-      Script: {instanceID: 11376}
+      Script: {instanceID: 11378}
     - Class: 114
-      Script: {instanceID: 11390}
+      Script: {instanceID: 11392}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -241,6 +241,12 @@ ScriptsOnlyBuild:
     className: PhysicsRaycaster
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: unused
+  - hash:
+      serializedVersion: 2
       Hash: bd3cf68c8964d3c66d1c43f4f98508c9
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -277,7 +283,7 @@ ScriptsOnlyBuild:
     className: Mask
   - hash:
       serializedVersion: 2
-      Hash: 4581682a5784816c04837b1f4cfed8fc
+      Hash: 90a65b1497728e36d9fe4610d5495816
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SlimeManager
@@ -319,7 +325,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: 28a710140afd8405f9945d16d7760060
+      Hash: f286b5e4e13955bdbbeee309ff1df62f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIController
@@ -427,7 +433,7 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
-      Hash: 6edc4e8b18908024df87c01363942131
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InputManager
